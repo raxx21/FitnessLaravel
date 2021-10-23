@@ -3,20 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cannotdo;
+use App\Models\Userlist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
 
 class CannotDoController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-        $this->middleware('admin');
-    }
 
     /**
      * Display a listing of the resource.
@@ -73,5 +66,87 @@ class CannotDoController extends Controller
             $user->delete();
         }
         return redirect()->route('cannotdo.index');
+    }
+
+    public function createCannotdo(Request $request){
+        $rules = array(
+            "user_id" => "required",
+            "cannot_do" => "required",
+        );
+        $validator = Validator::make($request->all(),$rules);
+        if($validator->fails()){
+            return response()->json($validator->errors(),401);
+        }else{
+            if(Userlist::where('id',$request->user_id)->first()){
+                $value = new Cannotdo;
+                $value->user_id=$request->user_id;
+                $value->cannot_do=$request->cannot_do;
+                $result = $value->save();
+                if($result){
+                    return  response()->json([
+                        "status" => 200,
+                        "message"=>"success",
+                    ],200);
+                }
+                else{
+                    return response()->json([
+                        "status" => 400,
+                        "message"=>"Something went wrong",
+                    ],400);
+                }
+            }else{
+                return response()->json([
+                    "status" => 400,
+                    "message"=>"User not exists",
+                ],400);
+            }
+
+        }
+    }
+
+    public function Cannotdo($userid){
+        if (Userlist::where('id', $userid)->first()) {
+            $value = Cannotdo::where('user_id', $userid)->get();
+            if(Cannotdo::where('user_id', $userid)->first()){
+                return response()->json([
+                    "status" => 200,
+                    "data" => $value
+                ],200);
+            }else{
+                return response()->json([
+                    "status" => 200,
+                    "message" => "This Users Cannotdo is Empty"
+                ],200);
+            }
+        }else{
+            return response()->json([
+                "status" => 400,
+                "message" => "User not exists"
+            ],400);
+        }
+    }
+
+    public function deleteCannotdo($id){
+        if (Cannotdo::where('id', $id)->first()) {
+            $value = Cannotdo::find($id);
+            if($value){
+                $value->delete();
+                return response()->json([
+                    "status" => 200,
+                    "data" => "Successfully Deleted"
+                ],200);
+            }
+            else{
+                return response()->json([
+                    "status" => 400,
+                    "message" => "Something went wrong"
+                ],400);
+            }
+        }else{
+            return response()->json([
+                "status" => 400,
+                "message" => "Cannotdo doesn't exists"
+            ],400);
+        }
     }
 }

@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\CanDoController;
+use App\Http\Controllers\CannotDoController;
+use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\GoalController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,9 +30,19 @@ Route::post('register','UserLists@register');
 Route::post('updateUser/{id}','UserLists@update_user');
 Route::delete('deleteUser/{id}','UserLists@delete_user');
 Route::post('profile_picture', 'UserLists@profile_picture');
-Route::post('reset_password', 'UserLists@reset_password');
+Route::post('reset_password', [ForgotPasswordController::class,'reset']);
+Route::post('forgot_password', [ForgotPasswordController::class,'forgot']);
+Route::post('createCando', [CanDoController::class,'createCando']);
+Route::get('cando/{userid}', [CanDoController::class,'Cando']);
+Route::delete('deleteCando/{id}', [CanDoController::class,'deleteCando']);
+Route::post('createCannotdo', [CannotDoController::class,'createCannotdo']);
+Route::get('cannotdo/{userid}', [CannotDoController::class,'Cannotdo']);
+Route::delete('deleteCannotdo/{id}', [CannotDoController::class,'deleteCannotdo']);
+Route::post('createGoal', [GoalController::class,'createGoal']);
+Route::get('goal/{userid}', [GoalController::class,'goal']);
+Route::delete('deleteGoal/{id}', [GoalController::class,'deleteGoal']);
 
-Route::post('forgot_password', [Userlist::class,'forgot_password']);
+
 
 
 // });

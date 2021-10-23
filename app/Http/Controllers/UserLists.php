@@ -7,10 +7,9 @@ use App\Models\Userlist;
 use Illuminate\Support\Facades\Hash;
 use Kreait\Firebase\Factory;
 use Illuminate\Support\Facades\DB;
-
 use Laravel\Sanctum\HasApiTokens;
-// use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Validator;
+
 class UserLists extends Controller
 {
     /**
@@ -171,6 +170,7 @@ class UserLists extends Controller
                 $user->email=$req->email;
                 $user->password=$pass;
                 $user->id_proof=$req->id_proof;
+                $user->number=$req->number;
                 $result =$user->save();
                 if($result){
                     return [
@@ -205,6 +205,7 @@ class UserLists extends Controller
             $user->password=$req->password;
             $user->group_count= $req->group_count;
             $user->id_proof=$req->id_proof;
+            $user->number=$req->number;
             $result =$user->save();
             if($result){
                 return [
@@ -272,7 +273,7 @@ class UserLists extends Controller
             $name = time().'.'.$image->getClientOriginalExtension();
             $destinationPath = public_path('/uploads/images');
             $image->move($destinationPath, $name);
-            if(Userlist::where('id',$input['user_id'])->update([ 'profile_picture' => 'images/'.$name ])){
+            if(Userlist::where('id',$input['user_id'])->update([ 'profile_picture' => '/images/'.$name ])){
                 return response()->json([
                     "result" => Userlist::select('id', 'user_name','email','profile_picture','status')->where('id',$input['user_id'])->first(),
                     "message" => 'Success',

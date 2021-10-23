@@ -14,11 +14,8 @@
                         <thead>
                           <tr>
                             <th>Id</th>
+                            <th>User Id</th>
                             <th>Goal Name</th>
-                            <th>From date</th>
-                            <th>To Date</th>
-                            <th>Description</th>
-                            <th>Status</th>
                             <th>Created At</th>
                             <th>Updated At</th>
 
@@ -28,11 +25,8 @@
                           @foreach($userlist as $user)
                             <tr>
                               <td>{{ $user->id }}</td>
-                              <td>{{ $user->goal_name }}</td>
-                              <td>{{ $user->from_date }}</td>
-                              <td>{{ $user->to_date }}</td>
-                              <td>{{ $user->description }}</td>
-                              <td>{{ $user->status }}</td>
+                              <td>{{ $user->user_id }}</td>
+                              <td>{{ $user->goal }}</td>
                               <td>{{ $user->created_at }}</td>
                               <td>{{ $user->updated_at }}</td>
                             </tr>

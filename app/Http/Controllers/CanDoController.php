@@ -3,20 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cando;
+use App\Models\Userlist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
+use function PHPUnit\Framework\isEmpty;
 
 class CanDoController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-        $this->middleware('admin');
-    }
+
 
     /**
      * Display a listing of the resource.
@@ -74,4 +69,87 @@ class CanDoController extends Controller
         }
         return redirect()->route('cando.index');
     }
+
+    public function createCando(Request $request){
+        $rules = array(
+            "user_id" => "required",
+            "can_do" => "required",
+        );
+        $validator = Validator::make($request->all(),$rules);
+        if($validator->fails()){
+            return response()->json($validator->errors(),401);
+        }else{
+            if(Userlist::where('id',$request->user_id)->first()){
+                $value = new Cando;
+                $value->user_id=$request->user_id;
+                $value->can_do=$request->can_do;
+                $result = $value->save();
+                if($result){
+                    return  response()->json([
+                        "status" => 200,
+                        "message"=>"success",
+                    ],200);
+                }
+                else{
+                    return response()->json([
+                        "status" => 400,
+                        "message"=>"Something went wrong",
+                    ],400);
+                }
+            }else{
+                return response()->json([
+                    "status" => 400,
+                    "message"=>"User not exists",
+                ],400);
+            }
+
+        }
+    }
+
+    public function Cando($userid){
+        if (Userlist::where('id', $userid)->first()) {
+            $value = Cando::where('user_id', $userid)->get();
+            if(Cando::where('user_id', $userid)->first()){
+                return response()->json([
+                    "status" => 200,
+                    "data" => $value
+                ],200);
+            }else{
+                return response()->json([
+                    "status" => 200,
+                    "message" => "This Users Cando is Empty"
+                ],200);
+            }
+        }else{
+            return response()->json([
+                "status" => 400,
+                "message" => "User not exists"
+            ],400);
+        }
+    }
+
+    public function deleteCando($id){
+        if (Cando::where('id', $id)->first()) {
+            $value = Cando::find($id);
+            if($value){
+                $value->delete();
+                return response()->json([
+                    "status" => 200,
+                    "data" => "Successfully Deleted"
+                ],200);
+            }
+            else{
+                return response()->json([
+                    "status" => 400,
+                    "message" => "Something went wrong"
+                ],400);
+            }
+        }else{
+            return response()->json([
+                "status" => 400,
+                "message" => "Cando doesn't exists"
+            ],400);
+        }
+    }
+
 }
