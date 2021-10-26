@@ -68,18 +68,17 @@ class CannotDoController extends Controller
         return redirect()->route('cannotdo.index');
     }
 
-    public function createCannotdo(Request $request){
+    public function createCannotdo($id,Request $request){
         $rules = array(
-            "user_id" => "required",
             "cannot_do" => "required",
         );
         $validator = Validator::make($request->all(),$rules);
         if($validator->fails()){
             return response()->json($validator->errors(),401);
         }else{
-            if(Userlist::where('id',$request->user_id)->first()){
+            if(Userlist::where('id',$id)->first()){
                 $value = new Cannotdo;
-                $value->user_id=$request->user_id;
+                $value->user_id=$id;
                 $value->cannot_do=$request->cannot_do;
                 $result = $value->save();
                 if($result){
@@ -107,10 +106,18 @@ class CannotDoController extends Controller
     public function Cannotdo($userid){
         if (Userlist::where('id', $userid)->first()) {
             $value = Cannotdo::where('user_id', $userid)->get();
+            $data  = $value->map(function ($e){
+                $element['id'] = $e['id'];
+                $element['user_id'] = $e['user_id'];
+                $element['text'] = $e['cannot_do'];
+                $element['created_at'] = $e['created_at'];
+                $element['updated_at'] = $e['updated_at'];
+                return $element;
+            });
             if(Cannotdo::where('user_id', $userid)->first()){
                 return response()->json([
                     "status" => 200,
-                    "data" => $value
+                    "data" => $data
                 ],200);
             }else{
                 return response()->json([

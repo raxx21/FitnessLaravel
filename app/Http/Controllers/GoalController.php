@@ -24,18 +24,17 @@ class GoalController extends Controller
         return view('dashboard.users.goal.goallist', compact('userlist'));
     }
 
-    public function createGoal(Request $request){
+    public function createGoal($id,Request $request){
         $rules = array(
-            "user_id" => "required",
             "goal" => "required",
         );
         $validator = Validator::make($request->all(),$rules);
         if($validator->fails()){
             return response()->json($validator->errors(),401);
         }else{
-            if(Userlist::where('id',$request->user_id)->first()){
+            if(Userlist::where('id',$id)->first()){
                 $value = new Goal;
-                $value->user_id=$request->user_id;
+                $value->user_id=$id;
                 $value->goal=$request->goal;
                 $result = $value->save();
                 if($result){
@@ -63,10 +62,19 @@ class GoalController extends Controller
     public function goal($userid){
         if (Userlist::where('id', $userid)->first()) {
             $value = Goal::where('user_id', $userid)->get();
+            $data  = $value->map(function ($e){
+                $element['id'] = $e['id'];
+                $element['user_id'] = $e['user_id'];
+                $element['text'] = $e['goal'];
+                $element['created_at'] = $e['created_at'];
+                $element['updated_at'] = $e['updated_at'];
+                return $element;
+            });
+
             if(Goal::where('user_id', $userid)->first()){
                 return response()->json([
                     "status" => 200,
-                    "data" => $value
+                    "data" => $data
                 ],200);
             }else{
                 return response()->json([

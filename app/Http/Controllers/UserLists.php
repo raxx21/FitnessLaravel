@@ -190,6 +190,7 @@ class UserLists extends Controller
 
     //put req for user
     function update_user($id,Request $req){
+
         if(Userlist::find($id)){
             $user = Userlist::find($id);
             $user->user_name=$req->user_name;
@@ -202,7 +203,6 @@ class UserLists extends Controller
             $user->goal_id=$req->goal_id;
             $user->goal_description=$req->goal_description;
             $user->email=$req->email;
-            $user->password=$req->password;
             $user->group_count= $req->group_count;
             $user->id_proof=$req->id_proof;
             $user->number=$req->number;
@@ -211,6 +211,7 @@ class UserLists extends Controller
                 return [
                     "status" => 200,
                     "message"=>"success",
+                    "result" => $user
                 ];
             }
             else{
@@ -271,22 +272,21 @@ class UserLists extends Controller
         if ($request->hasFile('profile_picture')) {
             $image = $request->file('profile_picture');
             $name = time().'.'.$image->getClientOriginalExtension();
-            $destinationPath = public_path('/uploads/images');
+            $destinationPath = public_path('../../public/uploads/images');
             $image->move($destinationPath, $name);
             if(Userlist::where('id',$input['user_id'])->update([ 'profile_picture' => '/images/'.$name ])){
                 return response()->json([
                     "result" => Userlist::select('id', 'user_name','email','profile_picture','status')->where('id',$input['user_id'])->first(),
                     "message" => 'Success',
                     "status" => 1
-                ]);
+                ],200);
             }else{
                 return response()->json([
                     "message" => 'Sorry something went wrong...',
                     "status" => 0
-                ]);
+                ],404);
             }
         }
-
     }
 
     // forgot password
@@ -350,13 +350,28 @@ class UserLists extends Controller
         if(Userlist::where('id',$request->id)->update($input)){
             return response()->json([
                 "message" => 'Success',
-                "status" => 1
+                "status" => 200
             ]);
         }else{
             return response()->json([
                 "message" => 'Invalid email address',
-                "status" => 0
-            ]);
+                "status" => 404
+            ],404);
+        }
+    }
+
+    public function getProfile($id){
+        $user = UserList::find($id);
+        if($user){
+            return response()->json([
+                "status" => 200,
+                "data" => $user
+            ],404);
+        }else{
+            return response()->json([
+                "status" => 200,
+                "message" => "User Doesn't exists"
+            ],404);
         }
     }
 }

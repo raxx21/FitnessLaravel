@@ -70,18 +70,17 @@ class CanDoController extends Controller
         return redirect()->route('cando.index');
     }
 
-    public function createCando(Request $request){
+    public function createCando($id,Request $request){
         $rules = array(
-            "user_id" => "required",
             "can_do" => "required",
         );
         $validator = Validator::make($request->all(),$rules);
         if($validator->fails()){
             return response()->json($validator->errors(),401);
         }else{
-            if(Userlist::where('id',$request->user_id)->first()){
+            if(Userlist::where('id',$id)->first()){
                 $value = new Cando;
-                $value->user_id=$request->user_id;
+                $value->user_id=$id;
                 $value->can_do=$request->can_do;
                 $result = $value->save();
                 if($result){
@@ -109,10 +108,18 @@ class CanDoController extends Controller
     public function Cando($userid){
         if (Userlist::where('id', $userid)->first()) {
             $value = Cando::where('user_id', $userid)->get();
+            $data  = $value->map(function ($e){
+                $element['id'] = $e['id'];
+                $element['user_id'] = $e['user_id'];
+                $element['text'] = $e['can_do'];
+                $element['created_at'] = $e['created_at'];
+                $element['updated_at'] = $e['updated_at'];
+                return $element;
+            });
             if(Cando::where('user_id', $userid)->first()){
                 return response()->json([
                     "status" => 200,
-                    "data" => $value
+                    "data" => $data
                 ],200);
             }else{
                 return response()->json([
