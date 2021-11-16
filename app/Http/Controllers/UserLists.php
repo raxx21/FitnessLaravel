@@ -122,12 +122,12 @@ class UserLists extends Controller
                 ], 404);
             }
 
-            //  $token = $user->createToken('my-app-token')->plainTextToken;
+             $token = $user->createToken('my-app-token')->plainTextToken;
 
             $response = [
                 'status' => "success",
                 'user' => $user,
-                // 'token' => $token
+                'token' => $token
             ];
 
              return response($response, 201);

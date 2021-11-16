@@ -222,7 +222,8 @@ class GroupsController extends Controller
                                     });
                                     return response()-> json([
                                         "status" => 200,
-                                        "data" => $data
+                                        "data" => $data,
+                                        "message" => "Successfully Joined the Group"
                                     ],200);
                                 }
                                 else{
@@ -271,7 +272,7 @@ class GroupsController extends Controller
             $group = GroupMember::where('user_id',$id)->where('admin',0)->get();
             if(GroupMember::where('user_id',$id)->where('admin',0)->first()){
                 $data  = $group->map(function ($e){
-                    $element['group_id'] = Group::find($e['group_id']);
+                    $element = Group::find($e['group_id']);
                     return $element;
                 });
                 return response()-> json([
@@ -288,6 +289,21 @@ class GroupsController extends Controller
             return response()-> json([
                 "status" => 404,
                 "message" => "User Doesn't exists"
+            ],404);
+        }
+    }
+
+    public function getAllGroup(){
+        $group = Group::all();
+        if($group){
+            return response()-> json([
+                "status" => 200,
+                "data" => $group
+            ],200);
+        }else{
+            return response()-> json([
+                "status" => 404,
+                "message" => "Something went wrong"
             ],404);
         }
     }

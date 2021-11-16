@@ -6,6 +6,7 @@ use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\GoalController;
 use App\Http\Controllers\GroupMemberController;
 use App\Http\Controllers\GroupsController;
+use Database\Seeders\UserList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use PHPUnit\TextUI\XmlConfiguration\GroupCollection;
@@ -26,7 +27,7 @@ use PHPUnit\TextUI\XmlConfiguration\GroupCollection;
 //     return $request->user();
 // });
 
-// Route::group(['middleware' => 'auth:sanctum'], function(){
+
 // User Api
 Route::get('users','UserLists@getUserListApi');
 Route::post('register','UserLists@register');
@@ -51,10 +52,12 @@ Route::get('group_members/{id}', [GroupMemberController::class,'getGroupMember']
 Route::get('get_my_group/{id}', [GroupsController::class,'getMyOwnGroup']);
 Route::get('join_group/{id}/{groupId}', [GroupsController::class,'joinGroup']);
 Route::get('get_group/{id}', [GroupsController::class,'getGroupNotAdmin']);
+Route::get('get_all_group', [GroupsController::class,'getAllGroup']);
 
 
-
-// });
+Route::group(['middleware' => 'auth:sanctum'], function(){
+    Route::get('get',[UserList::class,'get']);
+});
 
 Route::post('login','UserLists@login');
 
