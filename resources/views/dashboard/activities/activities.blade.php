@@ -16,8 +16,6 @@
                             <th>Id</th>
                             <th>Activity Name</th>
                             <th>Description</th>
-                            <th>Icon</th>
-                            <th>Status</th>
                             <th>Created At</th>
                             <th>Updated At</th>
                           </tr>
@@ -26,10 +24,8 @@
                           @foreach($users as $user)
                             <tr>
                               <td>{{ $user->id }}</td>
-                              <td>{{ $user->activity_name }}</td>
+                              <td>{{ $user->title }}</td>
                               <td>{{ $user->description }}</td>
-                              <td>{{ $user->icon }}</td>
-                              <td>{{ $user->status }}</td>
                               <td>{{ $user->created_at }}</td>
                               <td>{{ $user->updated_at }}</td>
                             </tr>

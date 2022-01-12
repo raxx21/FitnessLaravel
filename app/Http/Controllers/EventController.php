@@ -2,30 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Activitie;
+use App\Models\Event;
 use App\Models\Group;
 use App\Models\Userlist;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class ActivitiesController extends Controller
+class EventController extends Controller
 {
-    // index
-    public function index()
-    {
-        // $you = auth()->user();
-        $users = Activitie::all();
-        return view('dashboard.activities.activities', compact('users'));
-    }
-
-    // Api Functions
-    public function createActivity(Request $request){
+    // Api Function
+    public function createEvent(Request $request){
         $rules = array(
             "title" => "required",
             "description" => "required",
             "location" => "required",
-            "note" => "required",
-            "day" => "required",
+            "members" => "required",
+            "date" => "required",
             "from_time" => "required",
             "to_time" => "required",
             "user_id" => "required",
@@ -37,12 +30,12 @@ class ActivitiesController extends Controller
         }else{
             if(Userlist::where('id',$request->user_id)->first()){
                 if(Group::where('id',$request->group_id)->first()){
-                    $value = new Activitie;
+                    $value = new Event;
                     $value->title=$request->title;
                     $value->description=$request->description;
                     $value->location=$request->location;
-                    $value->note=$request->note;
-                    $value->day=$request->day;
+                    $value->members=$request->members;
+                    $value->date=$request->date;
                     $value->from_time=$request->from_time;
                     $value->to_time=$request->to_time;
                     $value->user_id=$request->user_id;
@@ -76,29 +69,12 @@ class ActivitiesController extends Controller
         }
     }
 
-    public function activity($id){
-        $activity = Activitie::where('group_id',$id)->paginate();
-        if(Activitie::where('group_id',$id)->first()){
+    public function event($id){
+        $event = Event::where('group_id',$id)->paginate();
+        if(Event::where('group_id',$id)->first()){
             return response()->json([
                 "status" => 200,
-                "data" => $activity
-            ],200);
-        }
-        else{
-            return response()->json([
-                "status" => 400,
-                "message" => "Activity doesn't exists"
-            ],400);
-        }
-    }
-
-    public function deleteActivity($id){
-        $activity = Activitie::find($id);
-        if($activity){
-            $activity->delete();
-            return response()->json([
-                "status" => 200,
-                "message" => "Successfully Deleted"
+                "data" => $event
             ],200);
         }
         else{

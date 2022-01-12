@@ -122,12 +122,14 @@ class UserLists extends Controller
                 ], 404);
             }
 
-             $token = $user->createToken('my-app-token')->plainTextToken;
+            // $token = $user->createToken('my-app-token')->plainTextToken;
+            // $user->api_token = $token;
+            // $user->save();
 
             $response = [
                 'status' => "success",
                 'user' => $user,
-                'token' => $token
+                // 'token' => $token
             ];
 
              return response($response, 201);
@@ -135,7 +137,6 @@ class UserLists extends Controller
 
     //post user
     function register(Request $req){
-
         $rules = array(
             "user_name" => "required",
             "email" => "required|email|regex:/^[a-zA-Z]{1}/|unique:users,email",
@@ -171,6 +172,7 @@ class UserLists extends Controller
                 $user->password=$pass;
                 $user->id_proof=$req->id_proof;
                 $user->number=$req->number;
+                $user->group_count="0";
                 $result =$user->save();
                 if($result){
                     return [
@@ -190,7 +192,6 @@ class UserLists extends Controller
 
     //put req for user
     function update_user($id,Request $req){
-
         if(Userlist::find($id)){
             $user = Userlist::find($id);
             $user->user_name=$req->user_name;
@@ -203,9 +204,9 @@ class UserLists extends Controller
             $user->goal_id=$req->goal_id;
             $user->goal_description=$req->goal_description;
             $user->email=$req->email;
-            $user->group_count= $req->group_count;
             $user->id_proof=$req->id_proof;
             $user->number=$req->number;
+            $user->group_count=$user->group_count;
             $result =$user->save();
             if($result){
                 return [
@@ -231,7 +232,6 @@ class UserLists extends Controller
 
     //delete user
     function delete_user($id){
-
         $user = Userlist::find($id);
         if($user){
             $result = $user->delete();
@@ -258,7 +258,6 @@ class UserLists extends Controller
 
     // Profile update
     public function profile_picture(Request $request){
-
         $input = $request->all();
         $validator = Validator::make($input, [
             'user_id' => 'required',
@@ -291,7 +290,6 @@ class UserLists extends Controller
 
     // forgot password
     public function forgot_password(Request $request){
-
         $input = $request->all();
         $validator = Validator::make($input, [
             'email' => 'required|email|regex:/^[a-zA-Z]{1}/',
@@ -366,12 +364,25 @@ class UserLists extends Controller
             return response()->json([
                 "status" => 200,
                 "data" => $user
-            ],404);
+            ],200);
         }else{
             return response()->json([
                 "status" => 200,
                 "message" => "User Doesn't exists"
             ],404);
+        }
+    }
+
+    public function get(Request $req){
+        try {
+            // $user_id = $req;
+            print("hey");
+        } catch (\Exception $e) {
+            return response()->json([
+                "status" => 500,
+                "message"=>$e->getMessage(),
+                "data"=>[]
+            ],500);
         }
     }
 }

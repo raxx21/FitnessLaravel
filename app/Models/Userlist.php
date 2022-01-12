@@ -18,9 +18,7 @@ class Userlist extends Model implements CanResetPasswordContract
     use HasApiTokens;
     use HasFactory;
 
-    protected $fillable = [
-        'id'
-    ];
+    protected $primaryKey = 'id';
 
     public function sendPasswordResetNotification($token)
     {

@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\ActivitiesController;
 use App\Http\Controllers\CanDoController;
 use App\Http\Controllers\CannotDoController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\GoalController;
 use App\Http\Controllers\GroupMemberController;
@@ -53,7 +55,18 @@ Route::get('get_my_group/{id}', [GroupsController::class,'getMyOwnGroup']);
 Route::get('join_group/{id}/{groupId}', [GroupsController::class,'joinGroup']);
 Route::get('get_group/{id}', [GroupsController::class,'getGroupNotAdmin']);
 Route::get('get_all_group', [GroupsController::class,'getAllGroup']);
+// Activity apis
+Route::post('create_activity', [ActivitiesController::class,'createActivity']);
+Route::get('activity/{id}', [ActivitiesController::class,'activity']);
+Route::delete('delete_activity/{id}', [ActivitiesController::class,'deleteActivity']);
+// Event apis
+Route::post('create_event', [EventController::class,'createEvent']);
+Route::get('event/{id}', [EventController::class,'event']);
 
+
+Route::middleware('auth:api')->get('/user-get', function (Request $request) {
+    return $request;
+});
 
 Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::get('get',[UserList::class,'get']);

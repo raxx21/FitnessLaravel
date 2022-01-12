@@ -137,6 +137,9 @@ class GroupsController extends Controller
                     $group_member->user_id=$id;
                     $group_member->admin=1;
                     $group_member_result = $group_member->save();
+                    $group_count = GroupMember::where('user_id',$id)->count();
+                    $user->group_count = $group_count;
+                    $user->save();
                     if($group_member_result){
                         return response()->json([
                             "status" => 200,
@@ -216,6 +219,11 @@ class GroupsController extends Controller
                             if($result_active_member){
                                 $group_member= GroupMember::where('group_id',$groupId)->get();
                                 if($group_member){
+                                    $user = UserList::find($id);
+                                    $group_count = GroupMember::where('user_id',$id)->count();
+                                    $user->group_count = $group_count;
+                                    // print($group_count);
+                                    $user->save();
                                     $data  = $group_member->map(function ($e){
                                         $element['user_id'] = UserList::find($e['user_id']);
                                         return $element;
@@ -269,8 +277,8 @@ class GroupsController extends Controller
     public function getGroupNotAdmin($id){
         $user = UserList::find($id);
         if($user){
-            $group = GroupMember::where('user_id',$id)->where('admin',0)->get();
-            if(GroupMember::where('user_id',$id)->where('admin',0)->first()){
+            $group = GroupMember::where('user_id',$id)->get();
+            if(GroupMember::where('user_id',$id)->first()){
                 $data  = $group->map(function ($e){
                     $element = Group::find($e['group_id']);
                     return $element;
