@@ -56,28 +56,28 @@ class ActivitiesController extends Controller
                     }
                     else{
                         return response()->json([
-                            "status" => 400,
+                            "status" => 40,
                             "message"=>"Something went wrong",
-                        ],400);
+                        ],404);
                     }
                 }else{
                     return response()->json([
-                        "status" => 400,
+                        "status" => 404,
                         "message"=>"Group not exists",
-                    ],400);
+                    ],404);
                 }
             }else{
                 return response()->json([
-                    "status" => 400,
+                    "status" => 404,
                     "message"=>"User not exists",
-                ],400);
+                ],404);
             }
 
         }
     }
 
     public function activity($id){
-        $activity = Activitie::where('group_id',$id)->paginate();
+        $activity = Activitie::where('group_id',$id)->simplePaginate();
         if(Activitie::where('group_id',$id)->first()){
             return response()->json([
                 "status" => 200,
@@ -86,9 +86,9 @@ class ActivitiesController extends Controller
         }
         else{
             return response()->json([
-                "status" => 400,
+                "status" => 404,
                 "message" => "Activity doesn't exists"
-            ],400);
+            ],404);
         }
     }
 
@@ -103,9 +103,9 @@ class ActivitiesController extends Controller
         }
         else{
             return response()->json([
-                "status" => 400,
+                "status" => 404,
                 "message" => "Activity doesn't exists"
-            ],400);
+            ],404);
         }
     }
 }

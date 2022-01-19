@@ -182,9 +182,9 @@ class UserLists extends Controller
                 }
                 else{
                     return response()->json([
-                        "status" => 400,
+                        "status" => 404,
                         "message"=>"Bad Request",
-                    ],400);
+                    ],404);
                 }
             }
         }
@@ -217,14 +217,14 @@ class UserLists extends Controller
             }
             else{
                 return [
-                    "status" => 400,
+                    "status" => 404,
                     "message"=>"Bad Request",
                 ];
             }
         }
         else{
             return [
-                "status" => 400,
+                "status" => 404,
                 "message"=>"User Doesn't exists",
             ];
         }
@@ -243,16 +243,16 @@ class UserLists extends Controller
             }
             else{
                 return [
-                    "status" => 400,
+                    "status" => 404,
                     "message"=>"Bad Request",
                 ];
             }
         }
         else{
             return response()->json([
-                "status" => 400,
+                "status" => 404,
                 "message"=>"User not found",
-            ],400);
+            ],404);
         }
     }
 

@@ -74,7 +74,8 @@ class GoalController extends Controller
             if(Goal::where('user_id', $userid)->first()){
                 return response()->json([
                     "status" => 200,
-                    "data" => $data
+                    "data" => $data,
+                    "message" => 'success'
                 ],200);
             }else{
                 return response()->json([

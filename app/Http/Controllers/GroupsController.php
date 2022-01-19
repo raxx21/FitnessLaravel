@@ -177,7 +177,8 @@ class GroupsController extends Controller
                 $group_member= Group::where('user_id',$id)->get();
                 return response()->json([
                     'status' => 200,
-                    'data' => $group_member
+                    'data' => $group_member,
+                    "message"=>'success'
                 ],200);
 
             }else{
@@ -285,7 +286,8 @@ class GroupsController extends Controller
                 });
                 return response()-> json([
                     "status" => 200,
-                    "data" => $data
+                    "data" => $data,
+                    "message"=>'success'
                 ],200);
             }else{
             return response()-> json([

@@ -62,6 +62,9 @@ Route::delete('delete_activity/{id}', [ActivitiesController::class,'deleteActivi
 // Event apis
 Route::post('create_event', [EventController::class,'createEvent']);
 Route::get('event/{id}', [EventController::class,'event']);
+Route::get('checkin/{eventId}/{userId}', [EventController::class,'checkIN']);
+Route::get('eventCheckIN/{eventId}', [EventController::class,'eventCheckIN']);
+Route::get('checkOUT/{eventId}/{userId}', [EventController::class,'checkOUT']);
 
 
 Route::middleware('auth:api')->get('/user-get', function (Request $request) {
