@@ -8,6 +8,8 @@ use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\GoalController;
 use App\Http\Controllers\GroupMemberController;
 use App\Http\Controllers\GroupsController;
+use App\Http\Controllers\PrefrenceController;
+use App\Models\Prefrence;
 use Database\Seeders\UserList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -65,6 +67,10 @@ Route::get('event/{id}', [EventController::class,'event']);
 Route::get('checkin/{eventId}/{userId}', [EventController::class,'checkIN']);
 Route::get('eventCheckIN/{eventId}', [EventController::class,'eventCheckIN']);
 Route::get('checkOUT/{eventId}/{userId}', [EventController::class,'checkOUT']);
+// Prefrences
+Route::post('create_prefrence', [PrefrenceController::class,'createPrefrence']);
+Route::get('prefrence/{user_id}', [PrefrenceController::class,'prefrence']);
+
 
 
 Route::middleware('auth:api')->get('/user-get', function (Request $request) {

@@ -184,7 +184,7 @@ class EventController extends Controller
         if($event){
             $event_member= EventMember::where('event_id',$eventId)->get();
             $data  = $event_member->map(function ($e){
-                $element['user'] = UserList::find($e['user_id']);
+                $element = UserList::find($e['user_id']);
                 return $element;
             });
             return response()->json([
