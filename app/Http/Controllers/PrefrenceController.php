@@ -86,4 +86,20 @@ class PrefrenceController extends Controller
             ],404);
         }
     }
+
+    public function deletePrefrence($id){
+        $prefrence = Prefrence::find($id);
+        if($prefrence){
+            $prefrence->delete();
+            return response()->json([
+                "status" => 200,
+                "message"=>"success",
+            ],200);
+        }else{
+            return response()->json([
+                "status" => 404,
+                "message"=>"Prefrence not exists",
+            ],404);
+        }
+    }
 }

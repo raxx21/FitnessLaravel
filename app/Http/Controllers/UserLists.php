@@ -117,8 +117,12 @@ class UserLists extends Controller
         $user= Userlist::where('email', $request->email)->first();
         // print_r($data);
             if (!$user || !Hash::check($request->password, $user->password)) {
-                return response([
-                    'message' => ['These credentials do not match our records.']
+                // return response([
+                //     'message' => ['These credentials do not match our records.']
+                // ], 404);
+                return response()->json([
+                    "message" => 'These credentials do not match our records.',
+                    "status" => 404
                 ], 404);
             }
 
@@ -126,13 +130,19 @@ class UserLists extends Controller
             // $user->api_token = $token;
             // $user->save();
 
-            $response = [
-                'status' => "success",
-                'user' => $user,
-                // 'token' => $token
-            ];
+            // $response = [
+            //     'status' => 200,
+            //     'user' => $user,
+            //     // 'token' => $token
+            // ];
 
-             return response($response, 201);
+            return response()->json([
+                "message" => 'Success',
+                "status" => 200,
+                "user"=>$user
+            ], 200);
+
+            //  return response($response, 201);
     }
 
     //post user

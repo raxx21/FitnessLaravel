@@ -98,6 +98,22 @@ class EventController extends Controller
         }
     }
 
+    public function eventDisplay($id){
+        $event = Event::find($id);
+        if($event){
+            return response()->json([
+                "status" => 200,
+                "data" => $event
+            ],200);
+        }
+        else{
+            return response()->json([
+                "status" => 400,
+                "message" => "Event doesn't exists"
+            ],400);
+        }
+    }
+
     public function checkIN($eventId,$userId){
         $user = UserList::find($userId);
         if($user){
@@ -208,10 +224,21 @@ class EventController extends Controller
                $event_member = EventMember::where('event_id',$eventId)->where('user_id',$userId)->first();
                if($event_member){
                   $event_member->delete();
-                  return response()-> json([
-                    "status" => 200,
-                    "message" => "Success"
-                ],200);
+                  $event_active = $event->active - 1;
+                  $event->active= $event_active;
+                  $result = $event->save();
+                  if($result){
+                    return response()-> json([
+                      "status" => 200,
+                      "message" => "Success"
+                  ],200);
+                  }else{
+                    return response()-> json([
+                        "status" => 404,
+                        "message" => "Something went wrong"
+                    ],404);
+                  }
+
                }else{
                 return response()-> json([
                     "status" => 404,
@@ -231,4 +258,28 @@ class EventController extends Controller
             ],404);
         }
     }
+
+    public function eventDelete($eventId){
+        $eventId = Event::find($eventId);
+        if($eventId){
+            $result = $eventId->delete();
+            if($result){
+                return response()-> json([
+                    "status" => 200,
+                    "message" => "Success"
+                ],200);
+            }else{
+            return response()-> json([
+                "status" => 404,
+                "message" => "Something went wrong"
+            ],404);
+        }
+        }else{
+            return response()-> json([
+                "status" => 404,
+                "message" => "Event Doesn't exists"
+            ],404);
+        }
+    }
+
 }
